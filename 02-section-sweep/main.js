@@ -6,8 +6,15 @@ import { buildPieces, solids, CUT } from './house.js';
 import { createDrawing } from './draw.js';
 import { createLook } from './look.js';
 import { createReal, SUN_DIR } from './real.js';
+import { getLang, tr, patchQueryLinks } from '../shared/lang.mjs';
+import { patchStaticPage, translateWalkKeys02 } from '../shared/i18n/apply-page.mjs';
 
 const Q = new URLSearchParams(location.search);
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('02');
+  patchQueryLinks();
+}
 const OFF = Q.has('offline');
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -142,6 +149,7 @@ function walkKeys() {
 let WK = [], WALK = null;
 function buildWalk() {
   WK = walkKeys();
+  translateWalkKeys02(WK);
   const n = WK.length;
   const pc = new THREE.CatmullRomCurve3(WK.map((k) => k.p), false, 'centripetal');
   const tc = new THREE.CatmullRomCurve3(WK.map((k) => k.t), false, 'centripetal');
@@ -462,7 +470,11 @@ function hud(T, S) {
   // the title block: draws its frame, then its text. Its scale stops being true the moment the lens opens.
   el.frame.style.clipPath = `inset(0 0 0 ${(100 * (1 - eIO(ramp(b, 0.55, 0.6)))).toFixed(2)}%)`;
   const m = flat ? 0 : 1;
-  if (m !== tbMode) { tbMode = m; tbSwap = T; el.t1.textContent = m ? 'Section perspective' : 'Section A-A'; el.scale.textContent = m ? 'Not to scale' : 'Scale 1:100'; }
+  if (m !== tbMode) {
+    tbMode = m; tbSwap = T;
+    el.t1.textContent = m ? tr('Section perspective') : tr('Section A-A');
+    el.scale.textContent = m ? tr('Not to scale') : tr('Scale 1:100');
+  }
   const swapK = OFF || S.tb > 0.8 ? 1 : ramp(T - tbSwap, 0, 0.35), tv = eOut(ramp(b, 0.9, 0.5));
   el.fades.forEach((f) => op(f, tv * (f === el.t1 || f.classList.contains('rows') ? lerp(0.15, 1, swapK) : 1)));
   const tbVis = cl((S.tb - 0.38) / 0.62);

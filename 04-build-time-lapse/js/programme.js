@@ -2,13 +2,24 @@
 // A classic script, so the loader is on screen before three.js has arrived.
 (function () {
   const WEEKS = 38;
+  const ES = new URLSearchParams(location.search).get('lang') === 'es';
   // [name, start, end] in weeks, continuous: 0 is the first morning on site, 38 is handover
-  const PROG = [
+  const PROG = ES ? [
+    ['Excavación', 0, 3], ['Cimentación', 3, 6], ['Planta inferior', 6, 9], ['Losas', 9, 11],
+    ['Muros, entrepiso', 11, 16], ['Cubierta', 16, 21], ['Acristalamiento', 21, 25], ['Acabados, jardín', 25, 38],
+  ] : [
     ['Excavate', 0, 3], ['Footings', 3, 6], ['Lower level', 6, 9], ['Ground slab', 9, 11],
     ['Walls, mezzanine', 11, 16], ['Roof', 16, 21], ['Glaze', 21, 25], ['Fit out, garden', 25, 38],
   ];
   // the six drawings of sheet A-901, each the house at the end of its weeks
-  const TILES = [
+  const TILES = ES ? [
+    { n: '01', name: 'Excavación, cimentación', w0: 0, w1: 6 },
+    { n: '02', name: 'Planta inferior', w0: 6, w1: 9 },
+    { n: '03', name: 'Losas', w0: 9, w1: 11 },
+    { n: '04', name: 'Muros, entrepiso', w0: 11, w1: 16 },
+    { n: '05', name: 'Cubierta', w0: 16, w1: 21 },
+    { n: '06', name: 'Cristales, acabados', w0: 21, w1: 38 },
+  ] : [
     { n: '01', name: 'Excavate, footings', w0: 0, w1: 6 },
     { n: '02', name: 'Lower level', w0: 6, w1: 9 },
     { n: '03', name: 'Ground slab', w0: 9, w1: 11 },
@@ -23,7 +34,7 @@
   const prog = document.getElementById('prog');
   prog.innerHTML = '<div class="rows"><div class="rowsbg"></div>' + PROG.map(([n, a, b], i) =>
     `<div class="row"><span>${pad(i + 1)} ${n}</span><div class="trk"><i class="plan" style="left:${a / WEEKS * 100}%;width:${(b - a) / WEEKS * 100}%"><i class="done"></i></i></div></div>`).join('') +
-    '<div class="now"><b>Wk 00</b></div></div><div class="foot"><span>A-901 &nbsp;//&nbsp; Programme &nbsp;//&nbsp; 38 weeks</span><span class="pct">000</span></div>';
+    `<div class="now"><b>${ES ? 'Sem 00' : 'Wk 00'}</b></div></div><div class="foot"><span>${ES ? 'A-901 &nbsp;//&nbsp; Programa &nbsp;//&nbsp; 38 semanas' : 'A-901 &nbsp;//&nbsp; Programme &nbsp;//&nbsp; 38 weeks'}</span><span class="pct">000</span></div>`;
   // the six tiles of the sheet
   document.getElementById('grid').innerHTML = TILES.map((t) =>
     `<figure class="tile"><div class="frame" data-num="${t.n}"></div><figcaption><span class="nm"><b>${t.n}</b>${t.name}</span><span class="wk">Wk ${pad(t.w0 + 1)}–${pad(t.w1)}</span></figcaption></figure>`).join('');

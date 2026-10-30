@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { buildHouse, groundWithPit, PHASES, WEEKS, C, dateAt, clamp01, smooth, HX, HZ, FL, RIDGE, MEZZ, BAYS, PIT } from './house.js';
+import { getLang, tr, patchQueryLinks } from '../shared/lang.mjs';
 
 const q = new URLSearchParams(location.search);
 const DIR = q.get('dir') || 'a';
@@ -15,6 +16,11 @@ const INIT_TOD = parseFloat(q.get('tod') ?? '15.5');
 const INIT_GHOST = parseFloat(q.get('ghost') ?? (DIR === 'b' ? '1' : '0'));
 const INIT_OPEN = q.has('open');
 const INIT_ROOM = q.get('room') || null;
+
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchQueryLinks();
+}
 
 // ------------------------------------------------------------------ 5-Stop Multi-Room Interior Walkthrough Spline
 const INTERIOR_STOPS = [
@@ -59,6 +65,17 @@ const INTERIOR_STOPS = [
     spec: 'Glass balustrade · double-height living room & eastern garden terrace',
   },
 ];
+
+if (getLang() === 'es') {
+  const titles = {
+    'Entry Threshold': 'Umbral de entrada',
+    'Living & Hearth': 'Salón y hogar',
+    'Kitchen & Dining': 'Cocina y comedor',
+    'The Loft Suite': 'Suite del desván',
+    'Gallery Overlook': 'Mirador de la galería',
+  };
+  INTERIOR_STOPS.forEach((s) => { if (titles[s.title]) s.title = titles[s.title]; });
+}
 
 // Keyframes along the continuous Catmull-Rom interior walkthrough spline (u in [0, 1])
 const TOUR_KEYS = [
@@ -531,7 +548,7 @@ function renderHud() {
           </div>
           <div class="chart"></div>
           <div class="foot">
-            <div class="hint mono"><i></i>Every bar is a part of the house. Scroll or drag the schedule to build it.</div>
+            <div class="hint mono"><i></i>${tr('Every bar is a part of the house. Scroll or drag the schedule to build it.')}</div>
             <div class="note mono">TIMBER PORTAL · 142 M² · 3 BED<span class="spec-line">CPM BASELINE // 70 WORKING DAYS</span></div>
           </div>
         </div>`;

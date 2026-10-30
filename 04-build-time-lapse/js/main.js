@@ -1,4 +1,12 @@
 // Sequence: one scroll through thirty-eight weeks.
+import { getLang, patchQueryLinks } from '../../shared/lang.mjs';
+import { patchStaticPage } from '../../shared/i18n/apply-page.mjs';
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('04');
+  patchQueryLinks();
+}
+
 // The loader is the programme being written. The sheet draws itself week by week (all six drawings at once,
 // each stopping at its own week). Scroll dives into drawing 01 down to the edge of the excavation, then walks
 // the site while the house goes up, enters the forest of props at week 18, glides through the room as props

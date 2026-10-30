@@ -3,6 +3,13 @@
 // one sun crosses the six facades at the drawing's own angle, then the camera goes to plot 04
 // (the open one, outlined in orange), swings open its oak door, and walks inside its parlour and atrium.
 import { createStage, run, THREE, span, ease, smooth, lerp, CONVENTION } from '../engine/elevation.js';
+import { getLang, patchQueryLinks } from '../../shared/lang.mjs';
+import { patchStaticPage } from '../../shared/i18n/apply-page.mjs';
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('07b');
+  patchQueryLinks();
+}
 
 const S = createStage({ hatch: 0.16, hatchPhone: 0.2, drawSpan: [-2, 47], drawDir: [1, 0.9], wipe: [-12, 26], soft: 1.6 });
 

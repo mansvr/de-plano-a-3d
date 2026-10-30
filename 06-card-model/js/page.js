@@ -13,6 +13,13 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import * as D from './desk.js';
 import * as RW from './real.js';
+import { getLang, tr, patchQueryLinks } from '../../shared/lang.mjs';
+import { patchStaticPage } from '../../shared/i18n/apply-page.mjs';
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('06');
+  patchQueryLinks();
+}
 import { SWEEP, sweepSide } from './sweep.js';
 
 const Q = new URLSearchParams(location.search);
@@ -575,7 +582,7 @@ function copy(tb, y, d, tau, w, r, e) {
   hud.endRest.forEach((el, i) => show(el, eout(seg(e, 0.58 + i * 0.05, 0.8 + i * 0.05)), 16));
   // the hint
   const hint = eout(seg(tb, 6.6, 7.4));
-  hud.hintText.textContent = d > 0.9 ? 'Scroll to walk in' : 'Scroll to shrink';
+  hud.hintText.textContent = d > 0.9 ? tr('Scroll to walk in') : tr('Scroll to shrink');
   css(hud.hint, { opacity: hint * (d < 0.06 ? 1 - d / 0.06 : d > 0.9 && tau <= 0 ? sstep(seg(d, 0.93, 1)) : 0) });
 }
 function render() { composer.render(); }

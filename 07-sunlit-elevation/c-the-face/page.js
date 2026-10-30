@@ -4,6 +4,13 @@
 // (every header's small hatched shadow becomes a real one), then drops low and rakes across the
 // wall until the pattern stands out, the lens inspects the proud headers, and steps through the open oak door.
 import { createStage, run, THREE, span, ease, smooth, lerp, CONVENTION } from '../engine/elevation.js';
+import { getLang, patchQueryLinks } from '../../shared/lang.mjs';
+import { patchStaticPage } from '../../shared/i18n/apply-page.mjs';
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('07c');
+  patchQueryLinks();
+}
 
 const S = createStage({ hatch: 0.045, hatchPhone: 0.05, drawSpan: [0, 6.2], wipe: [-5, 7], soft: 0.7, envScale: 0.55 });
 

@@ -9,8 +9,15 @@
 
 import * as THREE from 'three';
 import { createEngine } from './engine.js';
+import { getLang, patchQueryLinks } from '../shared/lang.mjs';
+import { patchStaticPage } from '../shared/i18n/apply-page.mjs';
 
 const Q = new URLSearchParams(location.search);
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('03');
+  patchQueryLinks();
+}
 const DIR = ['a', 'c'].includes(Q.get('dir')) ? Q.get('dir') : 'a';
 document.body.dataset.dir = DIR;
 document.querySelectorAll('.dirs a').forEach(a => a.classList.toggle('on', a.dataset.dir === DIR));

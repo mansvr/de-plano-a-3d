@@ -1,4 +1,6 @@
 import { renderer, scene, camera, ctx, camAt, applyCam, resize, Labels, clamp, lerp, ease, easeOut, win, DRAW } from './core.js';
+import { getLang, tr, patchQueryLinks } from '../shared/lang.mjs';
+import { applyChrome01, paintChrome01Dom, patchDirSwitch01, patchStaticPage } from '../shared/i18n/apply-page.mjs';
 
 const Q = new URLSearchParams(location.search);
 const DIR = (Q.get('dir') || 'a').toLowerCase();
@@ -19,6 +21,10 @@ const S = await mod.build(labels);
 // ---- page chrome from the direction. Headline lines sit in masks so they can slide up.
 const $ = id => document.getElementById(id);
 const C = S.chrome;
+if (getLang() === 'es') {
+  applyChrome01(C, DIR);
+  document.documentElement.lang = 'es';
+}
 const DWG_CODES = { a: 'AXO.04', b: 'ELEV.02', c: 'SEC.500' };
 if ($('dwgBadge')) $('dwgBadge').textContent = C.dwg || DWG_CODES[DIR] || 'AXO.04';
 document.querySelectorAll('#dirSwitch a').forEach(a => {
@@ -31,6 +37,11 @@ $('h1').innerHTML = C.h1.split('<br>').map(l => `<span class="ln"><span>${l}</sp
 $('spec').innerHTML = (C.spec || []).map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('');
 $('hint').textContent = C.hint;
 document.title = C.title || document.title;
+if (getLang() === 'es') {
+  paintChrome01Dom(C);
+  patchDirSwitch01();
+  patchQueryLinks();
+}
 addEventListener('resize', resize);
 
 // ---- interactive CAD mini-radar (#cad-map)
@@ -131,7 +142,7 @@ function step() {
   hero.style.opacity = ho; hero.style.transform = `translateY(${(1 - ho) * -20}px)`;
   $('counter').innerHTML = st.counter || '';
   $('legend').innerHTML = st.legend || ''; $('legend').style.opacity = st.legendOp ?? 0;
-  const hint = st.hint ?? C.hint;
+  const hint = tr(st.hint ?? C.hint);
   if ($('hint').textContent !== hint) $('hint').textContent = hint;
   const hw = document.querySelector('.hint-wrap');
   if (hw) hw.style.opacity = hint ? '1' : '0';

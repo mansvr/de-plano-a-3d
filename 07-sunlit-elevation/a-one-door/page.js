@@ -4,6 +4,13 @@
 // lens walks through the entrance hall, reception parlour, double-height kitchen atrium,
 // and out to the walled rear courtyard garden.
 import { createStage, run, THREE, span, ease, smooth, lerp, CONVENTION } from '../engine/elevation.js';
+import { getLang, patchQueryLinks } from '../../shared/lang.mjs';
+import { patchStaticPage } from '../../shared/i18n/apply-page.mjs';
+if (getLang() === 'es') {
+  document.documentElement.lang = 'es';
+  patchStaticPage('07a');
+  patchQueryLinks();
+}
 
 const S = createStage({ hatch: 0.11, hatchPhone: 0.12, drawSpan: [0, 12.2], wipe: [-11, 9], soft: 1.1 });
 
