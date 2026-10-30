@@ -1,8 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "version": 2,
-  "name": "irvs-de-plano-a-3d",
-  "public": true,
   "redirects": [
     {
       "source": "/",
